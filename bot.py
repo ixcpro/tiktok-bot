@@ -35,39 +35,46 @@ class Bot:
         video_url = self._choose_video_url()
         self._start_service(service, video_url)
 
-    def _print_banner(self):
-        print("+--------------------------------------------------------+")
-        print("|                                                        |")
-        print("|   Made by : Simon Farah                                |")
-        print("|   Github  : https://github.com/simonfarah/tiktok-bot   |")
-        print("|                                                        |")
-        print("+--------------------------------------------------------+")
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 
-        print("\n")
 
-    def _init_driver(self):
-        try:
-            print("[~] Loading driver, please wait...")
+def _print_banner(self):
+    print("+--------------------------------------------------------+")
+    print("|                                                        |")
+    print("|   Made by : Simon Farah                                |")
+    print("|   Github  : https://github.com/simonfarah/tiktok-bot   |")
+    print("|                                                        |")
+    print("+--------------------------------------------------------+")
+    print("\n")
 
-            options = webdriver.FirefoxOptions()
-            options.binary_location = "/usr/bin/firefox"
-            options.add_argument("--width=800")
-            options.add_argument("--height=700")
 
-            service = webdriver.FirefoxService(log_output="geckodriver.log")
-            service.path = (
-                "/usr/local/bin/geckodriver"  # Make sure the path is correct
-            )
+def _init_driver(self):
+    try:
+        print("[~] Loading Chrome driver, please wait...")
 
-            driver = webdriver.Firefox(options=options, service=service)
+        options = Options()
+        options.add_argument("--window-size=800,700")
 
-            print("[+] Driver loaded successfully")
-        except Exception as e:
-            print("[x] Error loading driver: {}".format(e))
-            exit(1)
+        # Uncomment if running on a server without a display
+        # options.add_argument("--headless")
 
-        print("\n")
-        return driver
+        # If chromedriver is in your PATH:
+        driver = webdriver.Chrome(options=options)
+
+        # Or specify the path manually:
+        # service = Service("/usr/local/bin/chromedriver")
+        # driver = webdriver.Chrome(service=service, options=options)
+
+        print("[+] Chrome driver loaded successfully")
+
+    except Exception as e:
+        print(f"[x] Error loading Chrome driver: {e}")
+        raise
+
+    print("\n")
+    return driver
 
     def _init_services(self):
         return {
